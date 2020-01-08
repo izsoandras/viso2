@@ -39,9 +39,10 @@ public:
 
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh);
-    camera_sub_ = it.subscribeCamera("image", 1, &MonoOdometer::imageCallback, this, transport);
+    camera_sub_ = it.subscribeCamera("image", 5, &MonoOdometer::imageCallback, this, transport);
 
     info_pub_ = local_nh.advertise<VisoInfo>("info", 1);
+    ROS_INFO_STREAM("KOSTRUKTOR LEFUTOTT");
   }
 
 protected:
@@ -50,6 +51,11 @@ protected:
       const sensor_msgs::ImageConstPtr& image_msg,
       const sensor_msgs::CameraInfoConstPtr& info_msg)
   {
+    ROS_INFO_STREAM("BELEPTEM A CALLB ACK-BE");
+    ROS_INFO_STREAM(image_msg->width);
+    ROS_INFO_STREAM(image_msg->height);
+    ROS_INFO_STREAM(info_msg->width);
+    ROS_INFO_STREAM(info_msg->height);
     ros::WallTime start_time = ros::WallTime::now();
  
     bool first_run = false;
@@ -138,6 +144,7 @@ protected:
       ros::WallDuration time_elapsed = ros::WallTime::now() - start_time;
       info_msg.runtime = time_elapsed.toSec();
       info_pub_.publish(info_msg);
+      ROS_INFO_STREAM(time_elapsed.toSec());
     }
   }
 };
